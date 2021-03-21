@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, Card, CardImg, CardText, CardBody, Breadcrumb, BreadcrumbItem, Label } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, Card, CardImg, 
+    CardText, CardBody, Breadcrumb, BreadcrumbItem, Label } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
+import { Loading } from './LoadingComponent';
 
 const required = val => val && val.length;
 const maxLength = len => val => !val || (val.length <= len);
@@ -47,7 +49,6 @@ class CommentForm extends Component {
         this.state = {
             isModalOpen: false
         };
-
         this.toggleModal = this.toggleModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -86,10 +87,9 @@ class CommentForm extends Component {
                             </div>
                             <div className="form-group">
                                 <Label htmlFor="author">Your Name</Label>
-                                <Control.text className="form-control"
-                                    model=".author" 
-                                    id="author" 
-                                    name="author" 
+                                <Control.text model=".author" id="author" name="author"
+                                placeholder="Your Name"
+                                className="form-control"                                     
                                     validators={{
                                         required,
                                         minLength: minLength(2),
@@ -110,14 +110,14 @@ class CommentForm extends Component {
                             </div>
                             <div className="form-group">
                                 <Label htmlFor="text">Comment</Label>
-                                    <Control.textarea className="form-control"
-                                        model=".text"
-                                        id="text" 
-                                        name="text"
+                                    <Control.textarea model=".text" id="text" name="text" 
                                         rows="6" 
+                                        className="form-control"
                                     />
                             </div>
-                            <Button type="submit" color="primary">Submit</Button>
+                            <Button type="submit" color="primary">
+                                Submit
+                            </Button>
                         </LocalForm>
                     </ModalBody>
                 </Modal>
@@ -127,6 +127,26 @@ class CommentForm extends Component {
 }
 
 function CampsiteInfo(props) {
+    if (props.isLoading) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <Loading />
+                </div>
+            </div>
+        );
+    }
+    if (props.errMess) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <div className="col">
+                        <h4>{props.errMess}</h4>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     if (props.campsite) {
         return (
             <div className="container">
