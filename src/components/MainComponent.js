@@ -68,7 +68,9 @@ class Main extends Component {
 
         return (
             <div>
+                <TransitionGroup>
                 <Header />
+                </TransitionGroup>
                 <TransitionGroup>
                     <CSSTransition key={this.props.location.key} classNames="page" timeout={300}>
                         <Switch>
