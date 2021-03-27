@@ -1,6 +1,7 @@
 import * as ActionTypes from './ActionTypes';
 import { baseUrl } from '../shared/baseUrl';
 
+//1 - Campsites
 export const fetchCampsites = () => dispatch => {
     dispatch(campsitesLoading());
 
@@ -38,6 +39,7 @@ export const addCampsites = campsites => ({
     payload: campsites
 });
 
+//2 - Comments
 export const fetchComments = () => dispatch => {
     return fetch(baseUrl + 'comments')
         .then(response => {
@@ -109,6 +111,7 @@ export const postComment = (campsiteId, rating, author, text) => dispatch => {
         });
 };
 
+// 3 - Promotions
 export const fetchPromotions = () => dispatch => {
     dispatch(promotionsLoading());
 
@@ -145,3 +148,67 @@ export const addPromotions = promotions => ({
     type: ActionTypes.ADD_PROMOTIONS,
     payload: promotions
 });
+
+// 4 - Partners
+export const fetchPartners = () => dispatch => {
+    return fetch(baseUrl + 'partners')
+        .then(response => {
+                if (response.ok) {
+                    return response;
+                } else {
+                    const error = new Error(`Error ${response.status}: ${response.statusText}`);
+                    error.response = response;
+                    throw error;
+                }
+            },
+            error => {
+                const errMess = new Error(error.message);
+                throw errMess;
+            }
+        )
+        .then(response => response.json())
+        .then(partners => dispatch(addPartners(partners)))
+        .catch(error => dispatch(partnersFailed(error.message)));
+}
+
+export const partnersLoading = () => ({
+    type: ActionTypes.PARTNERS_LOADING
+});
+
+export const partnersFailed = partners =>({
+    type: ActionTypes.PARTNERS_FAILED,
+    payload: partners
+});
+
+export const addPartners = partners => ({
+    type: ActionTypes.ADD_PARTNERS,
+    payload: partners
+});
+//Task 2 Week 5 Assignment Workshop - implement a new action creator
+export const postFeedback = (feedback) => () => {
+
+    return fetch(baseUrl + 'feedback', {
+            method: "POST",
+            body: JSON.stringify(feedback),
+            headers: {
+                "Content-Type": "application/json"
+            }
+         })
+         .then(response => {
+            if (response.ok) {
+                alert("Thank you for your feedback!" + JSON.stringify(feedback))
+                return response;
+            } else {
+                const error = new Error(`Error ${response.status}: ${response.statusText}`);
+                error.response = response;
+                throw error;
+            }
+        },
+        error => {
+            const errMess = new Error(error.message);
+            throw errMess;
+        }
+    )
+        .then(response => response.json())
+        .catch(error => console.log("Your feedback could not be posted" + error.message));
+};

@@ -56,7 +56,9 @@ function RenderComments({comments, postComment, campsiteId }) {
 }
 
 class CommentForm extends Component {
+   
     constructor(props) {
+        
         super(props);
         this.state = {
             isModalOpen: false
